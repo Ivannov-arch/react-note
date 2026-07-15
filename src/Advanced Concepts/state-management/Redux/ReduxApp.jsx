@@ -1,41 +1,78 @@
-
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux";
 import useAuthStore from "../../../Auth/AuthStore";
-import { useNavigate } from "react-router-dom";
+import PageLayout from "../../../Components/PageLayout";
+
+function ReduxDemo() {
+  const count = useSelector((state) => state.count);
+  const dispatch = useDispatch();
+
+  const btnStyle = {
+    padding: "8px 20px",
+    borderRadius: 8,
+    border: "1px solid rgba(255,255,255,0.1)",
+    cursor: "pointer",
+    fontSize: 13,
+    fontWeight: 600,
+    background: "rgba(255,255,255,0.05)",
+    color: "#e2e8f0",
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+      <span style={{ fontSize: 10, color: "#64748b", fontWeight: 600, uppercase: true }}>Redux Counter</span>
+      <h1 style={{ margin: 0, fontSize: 48, fontWeight: 800 }}>{count}</h1>
+      <div style={{ display: "flex", gap: 10 }}>
+        <button style={btnStyle} onClick={() => dispatch({ type: "DECREMENT" })}>Kurangi</button>
+        <button style={btnStyle} onClick={() => dispatch({ type: "INCREMENT" })}>Tambah</button>
+      </div>
+    </div>
+  );
+}
 
 export default function ReduxApp() {
-const navigate = useNavigate()
+  const user = useAuthStore((state) => state.user);
 
-    const user = useAuthStore((state) => state.user)
+  return (
+    <PageLayout
+      title="Redux Store Management"
+      subtitle="State management klasik untuk aplikasi JavaScript skala besar menggunakan arsitektur unidirectional data flow."
+      accentColor="#f43f5e"
+    >
+      <p>
+        Welcome, <span className="font-semibold text-rose-400">{user?.name || "Developer"}</span>!
+      </p>
+      <p>
+        <strong>Apa Itu Redux?</strong><br />
+        Redux adalah library state manager terpusat yang menggunakan arsitektur Flux.
+        Data mengalir searah (unidirectional): Action → Dispatcher → Store/Reducer → View.
+      </p>
 
-    const count = useSelector((state) => (state.count));
-    const dispatch = useDispatch();
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box">
+        <ReduxDemo />
+      </div>
 
-    // alternative
-    // const tambah = () => {
-    //     dispatch({ type: "INCREMENT" }); // Kirim action "INCREMENT" ke Redux store
-    //   };
-    
-    //   const kurangi = () => {
-    //     dispatch({ type: "DECREMENT" }); // Kirim action "DECREMENT" ke Redux store
-    //   };
+      <h2>🧪 Cara Kerja Redux (Actions & Reducer)</h2>
+      <pre>
+        <code>{`// 1. Definisikan Reducer
+const reducer = (state = { count: 0 }, action) => {
+  switch (action.type) {
+    case "INCREMENT":
+      return { count: state.count + 1 };
+    case "DECREASE":
+      return { count: state.count - 1 };
+    default:
+      return state;
+  }
+};
 
-    return (
-        <div className="mt-12 text-center"> 
-            <div className="*:mx-4 my-6 *:my-3">
-                <button onClick={() => navigate('/')} className="text-indigo-600">Home</button>
-                <button onClick={() => window.history.back()} className="text-indigo-600">Back</button>
-            </div>
+// 2. Dispatch action
+dispatch({ type: "INCREMENT" });`}</code>
+      </pre>
 
-            <div>    
-                <h2>Redux</h2>
-                <p>Welcome, {user.name}</p>
-            </div>
-
-            <h1>Redux Counter</h1>
-            <h2 className="my-5 text-6xl">{count}</h2>
-            <button onClick={() => dispatch({ type: "DECREMENT"})}>Kurangi</button>
-            <button onClick={() => dispatch({ type: "INCREMENT"})}>Tambah</button>
-        </div>
-    )
+      <div className="summary">
+        🎯 Redux sangat kuat untuk aplikasi skala besar dengan banyak relasi state, meskipun memerlukan lebih banyak boilerplate dibanding Zustand.
+      </div>
+    </PageLayout>
+  );
 }

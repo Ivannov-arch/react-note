@@ -1,112 +1,98 @@
-import Buttons from "../../Components/Button";
+import PageLayout from "../../Components/PageLayout";
 import { FixedSizeList as List } from "react-window";
+
 const names = Array.from({ length: 3000 }, (_, i) => `Nama ${i + 1}`);
 
-export default function ReactWindow() {
+function WindowDemo() {
   return (
-    <div className="space-y-6 p-4 text-left">
-      <h1>📦 Optimasi Daftar Panjang dengan react-window</h1>
-
-      <p>
-        <strong>Apa Itu react-window?</strong>
-        <br />
-        <code>react-window</code> adalah library React untuk menampilkan list
-        berukuran besar secara <strong>efisien</strong>. Hanya item yang
-        terlihat di layar (viewport) yang dirender. Sisanya tidak dimasukkan ke
-        dalam DOM sampai dibutuhkan. Teknik ini disebut{" "}
-        <strong>virtualisasi</strong>.
-      </p>
-
-      <h2>🚀 Kenapa Harus Digunakan?</h2>
-      <ul className="list-disc list-inside">
-        <li>Rendering ribuan item bisa membuat performa lambat.</li>
-        <li>
-          <code>react-window</code> memuat hanya bagian yang terlihat, jadi
-          lebih cepat & ringan.
-        </li>
-        <li>
-          Sangat cocok untuk data panjang (misalnya daftar user, transaksi,
-          dll).
-        </li>
-      </ul>
-
-      <h2>🔧 Contoh Implementasi</h2>
-      <List
-        height={400} // Tinggi area tampilan (viewport)
-        itemCount={3000} // Total item
-        itemSize={35} // Tinggi setiap item (px)
-        width={300} // Lebar daftar
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <div
+        style={{
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          borderRadius: 12,
+          overflow: "hidden",
+          background: "rgba(0,0,0,0.2)",
+        }}
       >
-        {({ index, style }) => <div style={style}>{names[index]}</div>}
-      </List>
-      <p>
-        Kita membuat daftar berisi 3000 nama. Hanya sebagian kecil yang akan
-        dirender di layar.
-      </p>
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
-        <code>{`<List
-  height={400}         // Tinggi area tampilan (viewport)
-  itemCount={3000}     // Total item
-  itemSize={35}        // Tinggi setiap item (px)
-  width={300}          // Lebar daftar
->
-  {({ index, style }) => (
-    <div style={style}>
-      {names[index]}
-    </div>
-  )}
-</List>`}</code>
-      </pre>
-
-      <h2>🧠 Cara Kerjanya</h2>
-      <ul className="list-disc list-inside">
-        <li>Viewport = area yang terlihat oleh user saat scroll.</li>
-        <li>
-          Item di luar viewport tidak dirender →{" "}
-          <strong>menghemat memori & waktu render</strong>.
-        </li>
-        <li>
-          Komponen <code>&lt;List&gt;</code> otomatis menghitung item mana saja
-          yang perlu ditampilkan.
-        </li>
-      </ul>
-
-      <h2>📌 Tips Tambahan</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Gunakan <code>react-window</code> untuk daftar besar (biasanya &gt;
-          500 item).
-        </li>
-        <li>
-          Jika ukuran item berbeda-beda, bisa pakai{" "}
-          <code>VariableSizeList</code>.
-        </li>
-        <li>
-          Bisa dipadukan dengan <code>react-virtualized-auto-sizer</code> untuk
-          otomatisasi ukuran.
-        </li>
-      </ul>
-
-      <h2>Kesimpulan</h2>
-      <p>
-        🎯 Gunakan <code>react-window</code> saat bekerja dengan data list besar
-        di React. Library ini memberikan <strong>performa tinggi</strong> dengan
-        cara hanya merender elemen yang benar-benar terlihat oleh user, sehingga
-        UI tetap mulus meski datanya banyak.
-      </p>
-
-      <Buttons />
+        <List
+          height={200}
+          itemCount={3000}
+          itemSize={35}
+          width={300}
+        >
+          {({ index, style }) => (
+            <div
+              style={{
+                ...style,
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: 16,
+                borderBottom: "1px solid rgba(255, 255, 255, 0.03)",
+                fontSize: 13,
+                color: "#94a3b8",
+              }}
+            >
+              👤 {names[index]}
+            </div>
+          )}
+        </List>
+      </div>
     </div>
   );
 }
 
-// // react-window
-// Memuat hanya elemen yang terlihat di viewport untuk menghemat sumber daya.
+export default function ReactWindow() {
+  return (
+    <PageLayout
+      title="Virtualisasi List dengan react-window"
+      subtitle="Render ribuan elemen daftar dengan performa tinggi hanya dengan menggambar item yang terlihat di viewport."
+      accentColor="#10b981"
+    >
+      <p>
+        <strong>Apa Itu react-window?</strong><br />
+        <code>react-window</code> adalah library React populer untuk memvirtualisasikan daftar (list virtualization).
+        Alih-alih membuat ribuan elemen DOM sekaligus yang membuat browser hang, ia hanya memuat elemen yang saat ini masuk di layar.
+      </p>
 
-// react-window adalah library React yang digunakan untuk mengoptimalkan rendering
-// daftar panjang (long lists) dengan cara "memvirtualisasi" daftar tersebut.
-// Artinya, hanya item-item yang terlihat di layar (viewport) yang akan di-render,
-// sementara item lainnya tetap berada di luar DOM hingga diperlukan.
+      <h2>🚀 Live Demo (3.000 Item)</h2>
+      <p style={{ textAlign: "center", fontSize: 13 }}>Coba scroll list di bawah ini:</p>
+      <div className="demo-box">
+        <WindowDemo />
+      </div>
 
-// Ini membantu menghemat memori dan meningkatkan performa aplikasi, terutama ketika
-// kamu bekerja dengan ribuan atau jutaan data.
+      <h2>🔧 Contoh Implementasi</h2>
+      <pre>
+        <code>{`import { FixedSizeList as List } from "react-window";
+
+const names = ["Name 1", "Name 2", "Name 3", ...]; // 3000 items
+
+function VirtualList() {
+  return (
+    <List
+      height={400}     // Tinggi kontainer list (px)
+      itemCount={3000} // Jumlah total data
+      itemSize={35}    // Tinggi tiap baris item (px)
+      width={300}      // Lebar kontainer
+    >
+      {({ index, style }) => (
+        <div style={style}>
+          {names[index]}
+        </div>
+      )}
+    </List>
+  );
+}`}</code>
+      </pre>
+
+      <h2>🎯 Manfaat Utama Virtualisasi</h2>
+      <ul>
+        <li><strong>Hemat Memori:</strong> Mengurangi beban RAM browser secara drastis.</li>
+        <li><strong>Instant Loading:</strong> Halaman langsung responsif sejak pertama kali dibuka meskipun memuat jutaan data.</li>
+      </ul>
+
+      <div className="summary">
+        🎯 Gunakan <code>react-window</code> jika Anda merender daftar panjang berisi lebih dari 500 data untuk menjaga kegesitan antarmuka pengguna Anda.
+      </div>
+    </PageLayout>
+  );
+}

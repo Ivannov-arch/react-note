@@ -1,179 +1,40 @@
-// import React from 'react'
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-// import { useState } from 'react'
-import createTodoQueryOptions from "./queryOptions/createTodoQueryOptions";
-import { useQueries, useSuspenseQueries } from "@tanstack/react-query";
-import createPostsQueryOptions from "./queryOptions/createPostsQueryOptions";
-import createUsersQueryOptions from "./queryOptions/createUsersQueryOptions";
 import Card from "./Card";
-import { Link } from "react-router-dom";
-import Buttons from "../../../Components/Button";
-
-//#region : loading, error, refetch example
-// export default function AustinReactQueryApp() {
-
-//     const { data, isPending, refetch, error } = useQuery({
-//         queryKey: ['todos', id],
-//         queryFn: () => getTodos(id)
-//     })
-
-//     if(error) {
-//         alert("Something went wrong");
-//     }
-
-//   return (
-//     <>
-//         <div>{isPending ? <p>Loading...</p> : JSON.stringify(data.slice(0, 10))}</div>
-//         <button onClick={() => refetch()}>Refetch</button>
-//     </>
-//   )
-// }
-
-// const getTodos = async () => {
-//     await new Promise((resolve) => setTimeout(resolve, 1000))
-//     const res = await fetch('https://jsonplaceholder.typicode.com/todos')
-//     return await res.json()
-// }
-
-//#endregion
-
-//#region : query options (parameters)
-// export default function AustinReactQueryApp() {
-
-//     const [id, setId] = useState(1)
-//     const {data, isPending} = useQuery ({
-//         queryKey: ['todos', id],
-//         queryFn: () => getTodos(id)
-//     })
-
-//   return (
-//     <>
-//         <div>{isPending ? <p>Loading...</p> : JSON.stringify(data.slice(0, 10))}</div> <br />
-//         <div className='inline-block'>{id != 1 ? <button onClick={() => setId((curr) => curr - 1)}>Decrement ID</button> : <p>1st Post</p>}</div>
-//         <button onClick={() => setId((curr) => curr + 1)}>Increment ID</button>
-//     </>
-//   )
-// }
-
-// const getTodos = async (id) => {
-//     await new Promise((resolve) => setTimeout(resolve, 1000))
-//     const res = await fetch(`https://jsonplaceholder.typicode.com/comments?postId=${id}`)
-//     return await res.json()
-// }
-
-//#endregion
-
-//#region : enable query
-// export default function AustinReactQueryApp() {
-
-//     const [on, setOn] = useState(true)
-//     const { data, isPending } = useQuery({
-//         queryKey: ['todos'],
-//         queryFn: getTodos,
-//         enabled: on
-//     })
-
-//   return (
-//     <>
-//         <div>{isPending ? <p>Loading...</p> : JSON.stringify(data.slice(0, 10))}</div>
-//         <button onClick={() => setOn(!on)}>{on? "Off" : "On"}</button>
-//     </>
-//   )
-// }
-
-// const getTodos = async () => {
-//     await new Promise((resolve) => setTimeout(resolve, 1000))
-//     const res = await fetch(`https://jsonplaceholder.typicode.com/comments?postId=${1}`)
-//     return await res.json()
-// }
-
-//#endregion
-
-//#region : reusable query options
-
-// export default function AustinReactQueryApp() {
-//   const { data, isPending } = useQuery(createTodoQueryOptions());
-
-//   return (
-//     <>
-//       <div>
-//         {isPending ? (
-//           <p>Loading...</p>
-//         ) : (
-//           <p>{JSON.stringify(data?.slice(0, 10))}</p>
-//           // <p>{data[0]?.completed}</p> // you can ctrl + Enter to check the props
-//         )}
-//       </div>
-//     </>
-//   );
-// }
-
-//#endregion
-
-//#region : useSuspenseQuery()
-// export default function AustinReactQueryApp() {
-//   // the data will never be undefined, but can't use enabled option
-//   const { data, isPending } = useSuspenseQuery(createTodoQueryOptions());
-
-//   return (
-//     <>
-//       <div>
-//         {isPending ? (
-//           <p>Loading...</p>
-//         ) : (
-//           <p>{JSON.stringify(data?.slice(0, 10))}</p>
-//           // <p>{data[0]?.completed}</p> // you can ctrl + Enter to check the props
-//         )}
-//       </div>
-//     </>
-//   );
-// }
-//#endregion
-
-//#region  : useQueries(), doing multiple queries asynchronously
-
-// export default function AustinReactQueryApp() {
-//   // the data will never be undefined, but can't use enabled option
-
-//   // const [{ data, isPending }, result2, result3] = useQueries({
-//   const [{ data, isPending }, result2, result3] = useSuspenseQueries({
-//     queries: [
-//       createTodoQueryOptions(),
-//       createUsersQueryOptions(),
-//       createPostsQueryOptions(),
-//     ],
-//   });
-
-//   return (
-//     <>
-//       <div>
-//         {isPending ? (
-//           <p>Loading...</p>
-//         ) : (
-//           <p>{JSON.stringify(data?.slice(0, 10))}</p>
-//           // <p>{data[0]?.completed}</p> // you can ctrl + Enter to check the props
-//         )}
-//       </div>
-//     </>
-//   );
-// }
-//#endregion
-
-//#region : useQueries(), doing multiple queries synchronously
+import PageLayout from "../../../Components/PageLayout";
 
 export default function AustinReactQueryApp() {
   return (
-    <>
-      <Card /> <br /> <br />
-      <Link
-        target="_blank"
-        to="https://youtu.be/r8Dg0KVnfMA?si=https://youtu.be/mPaCnwpFvZY?si=znyddf0zSuuUdrSC"
-      >
-        Learn More
-      </Link>
-      <Buttons />
-    </>
+    <PageLayout
+      title="React Query (Austin Davis Demo)"
+      subtitle="Menangani server-state asinkron dengan query dependensi dinamis menggunakan useSuspenseQuery dan useQuery."
+      accentColor="#06b6d4"
+    >
+      <p>
+        <strong>Konsep yang Dicontohkan:</strong><br />
+        Demo ini menggunakan <code>useSuspenseQuery</code> untuk mengambil data user terlebih dahulu.
+        Setelah daftar user termuat, id acak dari daftar user terpilih akan digunakan untuk memicu query kedua
+        yang memuat postingan milik user tersebut secara dinamis.
+      </p>
+
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box" style={{ background: "rgba(17,24,39,0.85)" }}>
+        <Card />
+      </div>
+
+      <h2>🧪 Cara Kerja Ketergantungan Query</h2>
+      <pre>
+        <code>{`// 1. Ambil data users dengan Suspense
+const { data: users } = useSuspenseQuery(createUsersQueryOptions());
+
+// 2. Ambil data posts berdasarkan id user yang terpilih secara dinamis
+const randomId = Math.floor(Math.random() * users.length);
+const { data: posts, isPending } = useQuery(
+  createPostsQueryOptions(randomId)
+);`}</code>
+      </pre>
+
+      <div className="summary">
+        🎯 Pola ini mempermudah data fetching berantai (dependent queries) di mana parameter query kedua tergantung pada hasil query pertama.
+      </div>
+    </PageLayout>
   );
 }
-
-//#endregion
