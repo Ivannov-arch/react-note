@@ -1,40 +1,29 @@
-import Buttons from "../../Components/Button";
+import PageLayout from "../../Components/PageLayout";
+
 export default function Page() {
   return (
-    <div className="space-y-6 text-left">
-      <h1>🛡️ Error Boundary di React</h1>
-
+    <PageLayout
+      title="Error Boundary di React"
+      subtitle="Tangkap error JavaScript di child components dan tampilkan fallback UI agar aplikasi tidak crash total."
+      accentColor="#f43f5e"
+    >
       <p>
-        <strong>Apa Itu Error Boundary?</strong>
-        <br />
-        Error Boundary adalah{" "}
-        <strong>komponen React kelas (class component)</strong> yang digunakan
+        <strong>Apa Itu Error Boundary?</strong><br />
+        Error Boundary adalah <strong>komponen React kelas (class component)</strong> yang digunakan
         untuk menangkap error JavaScript dalam komponen anak (child) saat proses
-        rendering, lifecycle method, atau constructor. Tujuannya:{" "}
-        <strong>mencegah seluruh UI crash</strong> hanya karena satu bagian
-        error.
+        rendering, lifecycle method, atau constructor. Tujuannya: <strong>mencegah seluruh UI crash</strong> hanya karena satu bagian error.
       </p>
 
       <h2>⚙️ Kapan Dipakai?</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Saat kamu ingin menampilkan fallback UI jika ada bagian aplikasi yang
-          error.
-        </li>
-        <li>
-          Sangat berguna di production untuk{" "}
-          <strong>menangkap bug tak terduga</strong>.
-        </li>
-        <li>
-          React 18 ke bawah hanya mendukung Error Boundary untuk class
-          component, bukan hook.
-        </li>
+      <ul>
+        <li>Saat kamu ingin menampilkan fallback UI jika ada bagian aplikasi yang error.</li>
+        <li>Sangat berguna di production untuk <strong>menangkap bug tak terduga</strong>.</li>
+        <li>React 18 ke bawah hanya mendukung Error Boundary untuk class component, bukan hook.</li>
       </ul>
 
-      <h2>🚨 Contoh Implementasi</h2>
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-sm">
-        <code>{`/* ErrorBoundary.jsx */
-import React from 'react';
+      <h2>🚨 Contoh Implementasi Class Component</h2>
+      <pre>
+        <code>{`import React from 'react';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -43,11 +32,11 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true }; // update UI jika error
+    return { hasError: true }; // update state untuk memicu fallback UI
   }
 
   componentDidCatch(error, info) {
-    console.error("ErrorBoundary caught an error", error, info); // bisa kirim ke logging service
+    console.error("ErrorBoundary caught an error:", error, info);
   }
 
   render() {
@@ -56,16 +45,13 @@ class ErrorBoundary extends React.Component {
     }
     return this.props.children;
   }
-}
-
-export default ErrorBoundary;`}</code>
+}`}</code>
       </pre>
 
       <h2>🧪 Contoh Pemakaian</h2>
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-sm">
-        <code>{`/* App.jsx atau Page.jsx */
-import ErrorBoundary from './ErrorBoundary';
-import Demo from './Demo'; // Komponen yang bisa saja error
+      <pre>
+        <code>{`import ErrorBoundary from './ErrorBoundary';
+import Demo from './Demo'; // Komponen yang mungkin error
 
 export default function Page() {
   return (
@@ -77,42 +63,17 @@ export default function Page() {
       </pre>
 
       <h2>📌 Tips & Best Practice</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Gunakan Error Boundary di <strong>sekitar bagian rawan error</strong>,
-          misalnya komponen fetch data.
-        </li>
-        <li>
-          Kamu bisa membuat <code>fallback UI</code> yang lebih menarik dari
-          sekadar teks, misalnya animasi error.
-        </li>
-        <li>
-          Tidak bisa menangkap error dari <strong>event handler</strong>,{" "}
-          <code>async/await</code>, atau error di server-side (Next.js SSR).
-        </li>
-        <li>
-          Untuk React 18+, bisa eksplor <code>React.lazy + Suspense</code> +{" "}
-          <code>useErrorBoundary</code> (via 3rd party).
-        </li>
+      <ul>
+        <li>Gunakan Error Boundary di <strong>sekitar bagian rawan error</strong>, misalnya komponen pihak ketiga atau fetch data.</li>
+        <li>Kamu bisa membuat <code>fallback UI</code> yang lebih menarik dari sekadar teks, seperti visual/ilustrasi error.</li>
+        <li>Tidak bisa menangkap error dari <strong>event handler</strong>, <code>async/await</code>, atau error di server-side (Next.js SSR).</li>
+        <li>Untuk React 18+, bisa menggunakan library seperti <code>react-error-boundary</code> untuk integrasi dengan function component.</li>
       </ul>
 
-      <h2>🎯 Kesimpulan</h2>
-      <p>
-        Error Boundary mencegah crash total pada UI saat error tak terduga
-        muncul. Gunakan di sekitar komponen penting untuk memberikan pengalaman
-        pengguna yang lebih aman & profesional. Ini adalah cara React untuk
-        memisahkan logika <strong>recovery</strong> dari error.
-      </p>
-
-      <div className="space-y-4">
-        <a
-          target="_blank"
-          href="https://reactjs.org/docs/error-boundaries.html"
-        >
-          Learn More from React Docs
-        </a>
-        <Buttons />
+      <div className="summary">
+        🎯 Error Boundary mencegah crash total pada UI saat error tak terduga muncul.
+        Gunakan di sekitar komponen penting untuk memberikan pengalaman pengguna yang lebih aman & profesional.
       </div>
-    </div>
+    </PageLayout>
   );
 }

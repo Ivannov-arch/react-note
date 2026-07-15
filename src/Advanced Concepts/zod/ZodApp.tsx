@@ -1,5 +1,4 @@
 import React from "react";
-import { z, ZodSet } from "zod";
 import ZodBasic from "./zod";
 import ZodObjects from "./ZodObject";
 import ZodTuples from "./ZodTuples";
@@ -10,30 +9,45 @@ import ZodSetType from "./SetType";
 import ZodPromiseType from "./PromiseType";
 import AdvancedValidation from "./AdvancedValidation";
 import HandlingError from "./HandlingZodError";
-import { Link } from "react-router-dom";
-import Buttons from "../../Components/Button";
+import PageLayout from "../../Components/PageLayout";
 
 export default function ZodApp() {
-  //#region : we don't need this
-  // type User = {
-  //     username: string
-  // }
-
-  // const user: User = { username: "WDS" }
-  //#endregion
-
   return (
-    <>
-      <div>
-        Zod, <br /> Check console.log()
-        <br /> <br />
-        <Link
-          target="_blank"
-          to="https://www.youtube.com/watch?v=L6BE-U3oy80&t=148s"
-        >
-          Learn More!
-        </Link>
-        <Buttons />
+    <PageLayout
+      title="Zod Schema Validation"
+      subtitle="TypeScript-first schema declaration and validation library."
+      accentColor="#3b82f6"
+    >
+      <p>
+        <strong>Apa Itu Zod?</strong><br />
+        Zod adalah library deklarasi skema dan validasi tipe yang berfokus pada TypeScript.
+        Dengan Zod, Anda mendefinisikan skema sekali dan Zod akan melacak tipe data
+        secara otomatis untuk mencegah kesalahan data runtime.
+      </p>
+
+      <div className="callout">
+        💡 <strong>Info:</strong> Validasi sedang berjalan di latar belakang. Silakan buka **Developer Tools (F12) → Console** untuk melihat output pengujian schema Zod secara langsung!
+      </div>
+
+      <h2>🧪 Skema Dasar Zod</h2>
+      <pre>
+        <code>{`import { z } from "zod";
+
+const UserSchema = z.object({
+  username: z.string().min(3),
+  age: z.number().optional(),
+  email: z.string().email(),
+});
+
+// Parsing data
+const result = UserSchema.safeParse({
+  username: "me",
+  email: "invalid-email",
+});`}</code>
+      </pre>
+
+      {/* Embedded validation elements that log to console */}
+      <div style={{ display: "none" }}>
         <ZodBasicMemo />
         <ZodObjectsMemo />
         <ZodTuplesMemo />
@@ -45,7 +59,11 @@ export default function ZodApp() {
         <AdvancedValidationMemo />
         <HandlingErrorMemo />
       </div>
-    </>
+
+      <div className="summary">
+        🎯 Zod memungkinkan validasi data runtime yang aman dan sinkronisasi tipe statis (static type inference) di TypeScript dengan sangat mudah.
+      </div>
+    </PageLayout>
   );
 }
 
