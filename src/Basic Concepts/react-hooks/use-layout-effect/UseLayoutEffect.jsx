@@ -1,150 +1,89 @@
-import { useEffect, useLayoutEffect } from "react";
-import Buttons from "../../../Components/Button";
+import { useEffect, useLayoutEffect, useState } from "react";
+import PageLayout from "../../../Components/PageLayout";
 
-export function UseLayoutEffect() {
+function LayoutEffectDemo() {
+  const [logs, setLogs] = useState([]);
+
   useEffect(() => {
-    console.log("Message from useEffect");
-  });
+    setLogs((l) => [...l, "✅ useEffect dijalankan (setelah render browser)"]);
+  }, []);
 
   useLayoutEffect(() => {
-    console.log("Message from useLayoutEffect");
-  });
+    setLogs((l) => [...l, "🔧 useLayoutEffect dijalankan (sebelum browser melukis)"]);
+  }, []);
 
   return (
-    <>
-      <h2>Test useLayoutEffect</h2>
-      <code>
-        <p>useLayoutEffect will be executed before components being rendered</p>
-        <p> and then useEffect after the components are rendered</p>
-      </code>{" "}
-      <hr /> <br />
-      {Array(200)
-        .fill("")
-        .map((_, index) => (
-          <li key={index}>{Math.pow(Math.random(), 10)}</li>
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h4 style={{ margin: 0, fontSize: 14 }}>Urutan Eksekusi (Console Log):</h4>
+        <button onClick={() => setLogs([])}>Reset Log</button>
+      </div>
+      <div
+        style={{
+          background: "rgba(0, 0, 0, 0.3)",
+          border: "1px solid rgba(255, 255, 255, 0.05)",
+          borderRadius: 8,
+          padding: 12,
+          fontFamily: "monospace",
+          fontSize: 12,
+          color: "#94a3b8",
+          minHeight: 80,
+        }}
+      >
+        {logs.map((log, index) => (
+          <div key={index} style={{ color: log.startsWith("✅") ? "#34d399" : "#a5b4fc", marginBottom: 4 }}>
+            {log}
+          </div>
         ))}
-    </>
+      </div>
+    </div>
   );
 }
 
 export default function Page() {
   return (
-    <div className="space-y-6 text-left">
-      <h1>🧠 Memahami useLayoutEffect di React</h1>
-
+    <PageLayout
+      title="useLayoutEffect() Hook"
+      subtitle="Mirip dengan useEffect, tapi dipanggil secara sinkron setelah semua perubahan DOM selesai namun sebelum browser menggambar ke layar."
+      accentColor="#6366f1"
+    >
       <p>
-        <strong>Apa Itu useLayoutEffect?</strong>
-        <br />
-        <code>useLayoutEffect</code> adalah hook di React yang mirip dengan{" "}
-        <code>useEffect</code>, tapi dijalankan <strong>lebih awal</strong>,
-        tepat setelah semua DOM dimutakhirkan <em>(mutated)</em>, namun{" "}
-        <strong>sebelum browser melukis tampilan</strong> ke layar.
+        <strong>Apa Itu useLayoutEffect?</strong><br />
+        <code>useLayoutEffect</code> adalah hook yang dijalankan <strong>lebih awal</strong>,
+        tepat setelah React memperbarui DOM tetapi <strong>sebelum browser sempat melukis</strong> (paint) tampilan baru tersebut di layar.
       </p>
 
-      <h2>🎯 Kapan Gunakan useLayoutEffect?</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Ketika kamu ingin <strong>mengukur ukuran elemen</strong> (seperti
-          tinggi/lebar).
-        </li>
-        <li>
-          Ketika kamu ingin <strong>mengatur posisi elemen</strong> berdasarkan
-          nilai DOM.
-        </li>
-        <li>
-          Ketika kamu butuh <strong>menghindari flicker</strong> visual sebelum
-          render terlihat.
-        </li>
-      </ul>
-
-      <h2>⚖️ Perbandingan: useEffect vs useLayoutEffect</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          <code>useEffect</code>: Dijalan **setelah komponen dirender ke
-          layar**.
-        </li>
-        <li>
-          <code>useLayoutEffect</code>: Dijalan **sebelum browser menampilkan
-          hasil render**.
-        </li>
-        <li>
-          Karena lebih awal, <code>useLayoutEffect</code> bisa{" "}
-          <strong>menghambat rendering</strong> jika terlalu berat.
-        </li>
-      </ul>
-
-      <h2>🧪 Contoh Kode: Perbedaan Waktu Eksekusi</h2>
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
-        <code>{`import { useEffect, useLayoutEffect } from 'react';
-  
-  export default function UseLayoutEffectDemo() {
-    useEffect(() => {
-      console.log('✅ useEffect dijalankan setelah render');
-    });
-  
-    useLayoutEffect(() => {
-      console.log('🔧 useLayoutEffect dijalankan sebelum render tampil di layar');
-    });
-  
-    return (
-      <>
-        <h2>Test useLayoutEffect</h2>
-        <p>Scroll ke bawah untuk melihat banyak elemen</p>
-        <ul>
-          {Array(40000)
-            .fill('')
-            .map((_, i) => (
-              <li key={i}>{Math.pow(Math.random(), 10)}</li>
-            ))}
-        </ul>
-      </>
-    );
-  }`}</code>
-      </pre>
-
-      <div className="bg-gray-700 p-5 border rounded h-96 overflow-y-scroll">
-        <UseLayoutEffect />
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box">
+        <LayoutEffectDemo />
       </div>
 
-      <h2>🔍 Penjelasan Eksekusi</h2>
-      <p>Dalam contoh di atas:</p>
-      <ul className="list-disc list-inside">
-        <li>
-          <code>useLayoutEffect</code> langsung dijalankan **begitu React
-          selesai mengupdate DOM**, sebelum layar sempat menggambar.
-        </li>
-        <li>
-          <code>useEffect</code> baru dijalankan setelah semuanya ditampilkan di
-          layar.
-        </li>
-        <li>
-          Coba buka DevTools → Console, dan perhatikan urutan log yang keluar.
-        </li>
+      <h2>⚖️ Perbandingan: useEffect vs useLayoutEffect</h2>
+      <ul>
+        <li><strong>useEffect (Asinkron):</strong> Dijalankan setelah browser menampilkan perubahan di layar. Cocok untuk sebagian besar efek samping seperti fetch data, set event listener, dll.</li>
+        <li><strong>useLayoutEffect (Sinkron):</strong> Dijalankan secara sinkron sebelum browser menggambar. Menghalangi rendering sementara (render-blocking) sampai isi efek selesai diproses.</li>
       </ul>
 
-      <h2>📌 Tips Penggunaan</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Hindari melakukan operasi berat dalam <code>useLayoutEffect</code>.
-        </li>
-        <li>
-          Gunakan hanya jika kamu benar-benar butuh kontrol DOM sebelum render
-          terlihat.
-        </li>
-        <li>
-          Untuk efek biasa, tetap gunakan <code>useEffect</code> agar UI tetap
-          responsif.
-        </li>
+      <h2>🎯 Kapan Sebaiknya Menggunakan useLayoutEffect?</h2>
+      <ul>
+        <li>Ketika kamu ingin <strong>mengukur ukuran elemen DOM</strong> (tinggi, lebar, posisi scroll) sebelum render selesai agar tidak ada efek flicker/berkedip.</li>
+        <li>Melakukan kalkulasi layout UI dinamis sebelum browser menampilkan hasilnya ke pengguna.</li>
       </ul>
 
-      <h2>Kesimpulan</h2>
-      <p>
-        🚀 <code>useLayoutEffect</code> memberikan kendali lebih awal atas DOM
-        sebelum browser menggambar ke layar. Cocok untuk animasi, pengukuran
-        layout, dan penyesuaian posisi — tapi jangan digunakan sembarangan
-        karena bisa memperlambat render!
-      </p>
-      <Buttons />
-    </div>
+      <h2>🧪 Contoh Kode Perbedaan Urutan</h2>
+      <pre>
+        <code>{`useEffect(() => {
+  console.log("✅ useEffect dijalankan setelah render visual");
+});
+
+useLayoutEffect(() => {
+  console.log("🔧 useLayoutEffect dijalankan sebelum browser menggambar");
+});`}</code>
+      </pre>
+
+      <div className="summary">
+        🎯 Gunakan <code>useLayoutEffect</code> hanya ketika Anda perlu melakukan manipulasi DOM visual yang mendesak untuk mencegah flicker visual. Untuk kasus umum, selalu gunakan <code>useEffect</code>.
+      </div>
+    </PageLayout>
   );
 }

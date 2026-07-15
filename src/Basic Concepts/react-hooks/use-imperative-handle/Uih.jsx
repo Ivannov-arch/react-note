@@ -1,34 +1,8 @@
-/* eslint-disable react/display-name */
 import { useRef, useImperativeHandle, forwardRef } from "react";
-import Buttons from "../../../Components/Button";
-
-export function UseImperativeHandleExample() {
-  const customInputRef = useRef();
-
-  return (
-    <div>
-      <code>
-        <p>
-          Used to make parent component only allowed to do certain actions on
-          the child component
-        </p>
-      </code>{" "}
-      <hr /> <br />
-      <div className="space-x-2">
-        <CustomInput ref={customInputRef} />
-        <button onClick={() => customInputRef.current.focusInput()}>
-          Focus
-        </button>
-        <button onClick={() => customInputRef.current.clearInput()}>
-          Clear
-        </button>
-      </div>
-    </div>
-  );
-}
+import PageLayout from "../../../Components/PageLayout";
 
 export const CustomInput = forwardRef((_, ref) => {
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useImperativeHandle(ref, () => ({
     focusInput: () => {
@@ -41,105 +15,95 @@ export const CustomInput = forwardRef((_, ref) => {
 
   return (
     <input
-      className="bg-slate-700 p-1 rounded-md placeholder-slate-400"
+      style={{
+        background: "rgba(255, 255, 255, 0.04)",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        borderRadius: "8px",
+        color: "#e2e8f0",
+        padding: "8px 12px",
+        fontSize: "14px",
+        outline: "none",
+        fontFamily: "inherit",
+        marginRight: 8,
+      }}
       ref={inputRef}
       type="text"
-      placeholder="Type something"
+      placeholder="Type something..."
     />
   );
 });
 
-export default function Page() {
-  return (
-    <div className="space-y-6 text-left">
-      <h1>🧠 useImperativeHandle di React</h1>
+CustomInput.displayName = "CustomInput";
 
-      <p>
-        <strong>Apa Itu useImperativeHandle?</strong>
-        <br />
-        Hook ini digunakan untuk mengatur <code>ref</code> agar hanya mengekspos
-        fungsi tertentu dari komponen child ke komponen parent. Jadi, parent
-        tidak bisa sembarangan mengakses seluruh DOM/fungsi internal child.
-      </p>
-
-      <h2>🔍 Kapan Digunakan?</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Saat kamu ingin <strong>mengontrol akses parent</strong> ke child
-          component, hanya untuk fungsi tertentu.
-        </li>
-        <li>
-          Cocok untuk membuat <em>reusable component</em> seperti input, modal,
-          atau player yang bisa dikendalikan dari luar (parent).
-        </li>
-      </ul>
-
-      <h2>🛠 Contoh: Custom Input yang Bisa Di-Control</h2>
-      <pre className="bg-slate-800 p-4 rounded-md overflow-auto">
-        <UseImperativeHandleExample />
-      </pre>
-      <p>Kita akan membuat input yang bisa di-focus dan di-clear dari luar:</p>
-
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-sm">
-        <code>{`// Parent Component
-export default function UseImperativeHandleExample() {
-  const customInputRef = useRef();
+function ImperativeDemo() {
+  const customInputRef = useRef(null);
 
   return (
-    <div>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
       <CustomInput ref={customInputRef} />
-      <button onClick={() => customInputRef.current.focusInput()}>Focus</button>
-      <button onClick={() => customInputRef.current.clearInput()}>Clear</button>
+      <button onClick={() => customInputRef.current?.focusInput()}>Focus</button>
+      <button onClick={() => customInputRef.current?.clearInput()}>Clear</button>
     </div>
   );
-}`}</code>
-      </pre>
+}
 
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-sm">
+export default function Page() {
+  return (
+    <PageLayout
+      title="useImperativeHandle() Hook"
+      subtitle="Mengatur ref yang diekspos oleh child component agar parent component hanya bisa mengakses fungsi spesifik."
+      accentColor="#8b5cf6"
+    >
+      <p>
+        <strong>Apa Itu useImperativeHandle?</strong><br />
+        Hook ini digunakan bersama <code>forwardRef</code> untuk membatasi kontrol parent component
+        terhadap child component. Parent tidak bisa sembarangan mengakses atau memodifikasi seluruh DOM/state internal child.
+      </p>
+
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box">
+        <ImperativeDemo />
+      </div>
+
+      <h2>🔍 Kapan Digunakan?</h2>
+      <ul>
+        <li>Saat kamu ingin membatasi parent component hanya untuk mengeksekusi aksi/fungsi tertentu pada child.</li>
+        <li>Cocok untuk membuat reusable components seperti input kustom, player media, modal, atau carousel yang dikontrol dari luar.</li>
+      </ul>
+
+      <h2>🧪 Contoh Kode Implementasi</h2>
+      <pre>
         <code>{`// Child Component (CustomInput.jsx)
-export const CustomInput = forwardRef((_, ref) => {
+import { forwardRef, useRef, useImperativeHandle } from "react";
+
+export const CustomInput = forwardRef((props, ref) => {
   const inputRef = useRef();
 
   useImperativeHandle(ref, () => ({
-    focusInput: () => inputRef.current?.focus(),
-    clearInput: () => (inputRef.current.value = "")
+    focusInput: () => inputRef.current.focus(),
+    clearInput: () => inputRef.current.value = "",
   }));
 
-  return <input ref={inputRef} type="text" placeholder="Type something" />;
+  return <input ref={inputRef} />;
 });`}</code>
       </pre>
 
       <h2>💡 Analogi Sederhana</h2>
       <p>
-        Bayangkan komponen child adalah <strong>mesin kopi otomatis</strong>.
-        Dengan <code>useImperativeHandle</code>
-        {`, kamu hanya kasih akses ke tombol "Start"
-        dan "Clean" saja — tanpa membiarkan orang lain utak-atik mesin bagian dalam.`}
+        Bayangkan komponen child adalah <strong>mesin kopi otomatis</strong>.<br />
+        Dengan <code>useImperativeHandle</code>, Anda hanya menyediakan akses ke tombol <em>"Brew"</em> dan <em>"Clean"</em>
+        tanpa membiarkan parent membongkar isi mesin di dalamnya.
       </p>
 
-      <h2>📌 Tips Penting</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Hanya bisa digunakan pada komponen yang dibungkus{" "}
-          <code>forwardRef()</code>.
-        </li>
-        <li>
-          Gunakan untuk menjaga{" "}
-          <strong>encapsulation dan kontrol terbatas</strong>.
-        </li>
-        <li>
-          Jangan terlalu sering pakai — biasanya hanya untuk komponen interaktif
-          kompleks.
-        </li>
+      <h2>📌 Aturan Penggunaan</h2>
+      <ul>
+        <li>Hanya dapat digunakan di dalam komponen yang dibungkus oleh <code>forwardRef()</code>.</li>
+        <li>Gunakan untuk menjaga enkapsulasi (encapsulation) dan keamanan interaksi komponen.</li>
       </ul>
 
-      <h2>Kesimpulan</h2>
-      <p>
-        🎯 Gunakan <code>useImperativeHandle</code> untuk membuat interface yang
-        rapi antara parent dan child. Cocok untuk komponen yang butuh kontrol
-        terbatas dari luar.
-      </p>
-      <Buttons />
-    </div>
+      <div className="summary">
+        🎯 Gunakan <code>useImperativeHandle</code> untuk menjaga pembatasan fungsionalitas dan enkapsulasi yang rapi antara parent dan child component.
+      </div>
+    </PageLayout>
   );
 }

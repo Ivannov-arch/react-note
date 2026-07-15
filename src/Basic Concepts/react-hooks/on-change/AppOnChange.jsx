@@ -1,104 +1,67 @@
-"use client";
-
-import Buttons from "../../../Components/Button";
 import OnChange from "./OnChange";
+import PageLayout from "../../../Components/PageLayout";
 
 export default function Page() {
   return (
-    <div className="space-y-6 p-4 text-left">
-      <h1>
-        📝 Memahami <code>onChange</code> di React
-      </h1>
-
+    <PageLayout
+      title="onChange Event Handler"
+      subtitle="Menghubungkan elemen input form dengan state React untuk membuat controlled components."
+      accentColor="#6366f1"
+    >
       <p>
-        <strong>
-          Apa Itu <code>onChange</code>?
-        </strong>
-        <br />
-        <code>onChange</code> adalah event handler yang digunakan untuk
-        menangani perubahan pada elemen form seperti <code>&lt;input&gt;</code>,{" "}
+        <strong>Apa Itu onChange?</strong><br />
+        <code>onChange</code> adalah event handler di React yang digunakan untuk
+        menangani setiap perubahan pada elemen form seperti <code>&lt;input&gt;</code>,{" "}
         <code>&lt;textarea&gt;</code>, <code>&lt;select&gt;</code>, dan{" "}
-        <code>&lt;{`input type="radio"`}&gt;</code>. <br />
-        Ketika nilai dari elemen tersebut berubah, <code>onChange</code> akan
-        men-trigger sebuah fungsi.
+        <code>&lt;input type="radio"&gt;</code>.
+        Ketika nilai elemen berubah, <code>onChange</code> memicu handler function untuk mengupdate state.
       </p>
 
       <h2>🎯 Tujuan Utama</h2>
       <p>
-        Menghubungkan input user ke state React agar tampilan antarmuka selalu
-        sinkron dengan data yang tersimpan.
+        Menghubungkan input user ke state React agar data UI selalu tersinkronisasi secara real-time.
       </p>
+
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box" style={{ background: "rgba(17,24,39,0.85)" }}>
+        <OnChange />
+      </div>
 
       <h2>🔍 Contoh Implementasi</h2>
-      <p>
-        Di bawah ini adalah contoh komponen React yang menangani berbagai jenis
-        input:
-      </p>
-
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
+      <pre>
         <code>{`const [name, setName] = useState("Guest");
 
 function handleNameChange(event) {
   setName(event.target.value);
 }
 
-<input value={name} onChange={handleNameChange} />
-<p>Name: {name}</p>`}</code>
+return (
+  <>
+    <input value={name} onChange={handleNameChange} />
+    <p>Name: {name}</p>
+  </>
+);`}</code>
       </pre>
 
-      <p>
-        Setiap kali user mengetik di input tersebut, fungsi{" "}
-        <code>handleNameChange</code> dipanggil, lalu memperbarui state{" "}
-        <code>name</code>.
-      </p>
-
-      <h2>
-        📦 Jenis-Jenis Input yang Bisa Pakai <code>onChange</code>
-      </h2>
-      <ul className="list-disc list-inside">
-        <li>
-          <strong>Text Input</strong>: untuk nama, username, dsb.
-        </li>
-        <li>
-          <strong>Number Input</strong>: untuk jumlah/barang.
-        </li>
-        <li>
-          <strong>Textarea</strong>: untuk komentar atau catatan panjang.
-        </li>
-        <li>
-          <strong>Select</strong>: pilihan seperti metode pembayaran.
-        </li>
-        <li>
-          <strong>Radio</strong>: pilihan antara dua opsi seperti “Pick Up” atau
-          “Delivery”.
-        </li>
+      <h2>📦 Jenis-Jenis Input yang Didukung</h2>
+      <ul>
+        <li><strong>Text Input:</strong> untuk nama, username, kata sandi, dsb.</li>
+        <li><strong>Number Input:</strong> untuk kuantitas, harga, umur.</li>
+        <li><strong>Textarea:</strong> untuk kolom teks panjang, deskripsi, atau komentar.</li>
+        <li><strong>Select Dropdown:</strong> pilihan dari daftar menu dropdown.</li>
+        <li><strong>Radio Buttons:</strong> pilihan tunggal dari beberapa opsi yang tersedia.</li>
       </ul>
 
-      <h2>🧠 Pentingnya Controlled Component</h2>
+      <h2>🧠 Controlled Components</h2>
       <p>
-        Dengan <strong>controlled component</strong>, kita menyimpan data input
-        di state React, bukan di DOM. Ini memberikan kita kontrol penuh terhadap
-        input dan memungkinkan validasi atau manipulasi data secara langsung.
+        Di React, input form yang datanya diatur oleh state disebut dengan <strong>controlled component</strong>.
+        Ini memberi kita kontrol penuh atas isi input, mempermudah validasi langsung, dan mempermudah reset nilai input.
       </p>
 
-      <h2>🔧 Komponen Lengkap</h2>
-      <p>
-        Berikut adalah komponen lengkap dari implementasi <code>onChange</code>:
-      </p>
-      <div className="bg-gray-50 p-4 border border-gray-300 rounded-md text-black">
-        <OnChange />
+      <div className="summary">
+        🎯 Gunakan event <code>onChange</code> untuk menangkap input pengguna secara real-time dan
+        menyinkronkannya dengan state React Anda.
       </div>
-
-      <h2>Kesimpulan</h2>
-      <p>
-        🎯 Gunakan <code>onChange</code> untuk membaca input pengguna secara
-        real-time dan menyimpannya di state. Ini sangat krusial dalam pembuatan
-        form, validasi data, serta menjaga UI tetap sinkron dengan logika
-        aplikasi.
-      </p>
-
-      <h2 className="text-center">🔁 Navigasi</h2>
-      <Buttons />
-    </div>
+    </PageLayout>
   );
 }

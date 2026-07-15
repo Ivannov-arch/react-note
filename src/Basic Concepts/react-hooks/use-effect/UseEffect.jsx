@@ -1,172 +1,13 @@
-// useEffect() = React Hook that tells React to DO THIS CODE WHEN (pick one):
-//           This component re-renders
-//           This component mounts
-//           The state of a value
-
-// useEffect(function, [dependencies])
-
-//  1. useEffect(() => {})          // Runs after every re-render
-//  1. useEffect(() => {}, [])      // Runs after every re-render
-//  1. useEffect(() => {}, [value]) // Runs after every re-render
-
-// USES
-// 1. Event Listeners
-// 2. DOM Manipulations
-// 3. Subscriptions (real-time updates)
-// 4. Fetching Data from an API
-// 5. Clean Up when a component unmounts
-
-import React, { useState, useEffect } from "react";
-React;
-import Buttons from "../../../Components/Button";
+import { useState, useEffect } from "react";
+import PageLayout from "../../../Components/PageLayout";
 
 function MyEffect() {
-  // ---------------------------------------------------------------------------
   const [count, setCount] = useState(0);
-  const [color, setColor] = useState("gray");
+  const [color, setColor] = useState("indigo");
 
   useEffect(() => {
-    document.title = `Count: ${count} ${color}`;
-
-    return () => {
-      // SOME CLEANUP CODE
-    };
-  }, [count, color]);
-
-  function addCount() {
-    setCount((c) => c + 1);
-  }
-  function substractCount() {
-    setCount((c) => c - 1);
-  }
-  function changeColor() {
-    setColor((c) => (c === "gray" ? "red" : "gray"));
-  }
-
-  // ------------------------------------------------------------------------
-
-  const [width, setWidth] = useState(window.innerWidth);
-  const [height, setHeight] = useState(window.innerHeight);
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    console.log("EVENT LISTENER ADDED");
-
-    return () => {
-      console.log("EVENT LISTENER REMOVED");
-    };
-  }, []);
-
-  useEffect(() => {
-    document.title = `Size: ${width} x ${height}`;
-  }, [width, height]);
-
-  function handleResize() {
-    setWidth(window.innerWidth);
-    setHeight(window.innerHeight);
-  }
-
-  // ------------------------------------------------------------------
-
-  return (
-    <>
-      <p>Window Width: {width}</p>
-      <p>Window Height: {height}</p>
-
-      <div className="space-x-3 mt-6">
-        <p className="mt-6 mb-4 text-3xl" style={{ color: color }}>
-          Count: {count}
-        </p>
-        <button onClick={addCount}>Add</button>
-        <button onClick={substractCount}>Substract</button>
-        <button onClick={changeColor}>Change Color</button>
-      </div>
-    </>
-  );
-}
-
-("use client");
-
-export default function Page() {
-  return (
-    <div className="space-y-6 text-left">
-      <h1>🧠 Mengenal useEffect di React</h1>
-
-      <p>
-        <strong>Apa Itu useEffect?</strong>
-        <br />
-        <code>useEffect()</code> adalah hook React yang memungkinkan kamu untuk
-        menjalankan *side effect* di dalam komponen — seperti update DOM, event
-        listener, fetch API, atau mengatur timer. Ini mirip dengan{" "}
-        <code>componentDidMount</code>, <code>componentDidUpdate</code>, dan{" "}
-        <code>componentWillUnmount</code> di class component.
-      </p>
-
-      <h2>🧪 Contoh Dasar: Manipulasi Judul Halaman</h2>
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
-        <code>{`useEffect(() => {
-  document.title = \`Count: \${count} \${color}\`;
-
-  return () => {
-    // Cleanup function (opsional)
-  }
-}, [count, color]);`}</code>
-      </pre>
-      <p>
-        Efek ini dijalankan setiap kali <code>count</code> atau{" "}
-        <code>color</code> berubah. <strong>Cleanup function</strong> (opsional)
-        dipanggil sebelum efek dijalankan ulang atau sebelum komponen unmount.
-      </p>
-
-      <h2>📐 Contoh Lain: Resize Window Listener</h2>
-      <p>
-        Ketika kamu ingin memantau ukuran layar, kamu bisa menambahkan event
-        listener saat komponen dimount, lalu membersihkannya saat unmount.
-      </p>
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
-        <code>{`useEffect(() => {
-  window.addEventListener("resize", handleResize);
-  console.log("EVENT LISTENER ADDED");
-
-  return () => {
-    window.removeEventListener("resize", handleResize);
-    console.log("EVENT LISTENER REMOVED");
-  }
-}, []);`}</code>
-      </pre>
-      <p>
-        Array kosong <code>[]</code> berarti efek ini hanya dijalankan sekali
-        saat *component mount* dan dibersihkan saat *unmount*.
-      </p>
-
-      <h2>🔁 Dynamic Update: Mengikuti Lebar dan Tinggi</h2>
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
-        <code>{`useEffect(() => {
-  document.title = \`Size: \${width} x \${height}\`;
-}, [width, height]);`}</code>
-      </pre>
-      <p>
-        Efek ini akan update <code>document.title</code> setiap kali{" "}
-        <code>width</code> atau <code>height</code> berubah.
-      </p>
-
-      <h2>⚙️ Contoh Implementasi Lengkap</h2>
-      <div className="bg-slate-200 dark:bg-slate-700 p-4 border rounded-md text-center">
-        <MyEffect />
-      </div>
-      <p>Berikut adalah komponen React yang menggunakan beberapa useEffect:</p>
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
-        <code>{`import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-
-function MyEffect() {
-  const navigate = useNavigate();
-  const [count, setCount] = useState(0);
-  const [color, setColor] = useState("gray");
-
-  useEffect(() => {
-    document.title = \`Count: \${count} \${color}\`;
-  }, [count, color]);
+    document.title = `Count: ${count}`;
+  }, [count]);
 
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
@@ -176,66 +17,87 @@ function MyEffect() {
       setWidth(window.innerWidth);
       setHeight(window.innerHeight);
     }
-
     window.addEventListener("resize", handleResize);
-    console.log("EVENT LISTENER ADDED");
-
     return () => {
       window.removeEventListener("resize", handleResize);
-      console.log("EVENT LISTENER REMOVED");
     };
   }, []);
 
-  useEffect(() => {
-    document.title = \`Size: \${width} x \${height}\`;
-  }, [width, height]);
-
   return (
-    <>
-      <div className="*:mx-4 my-6 *:my-3">
-        <button onClick={() => navigate('/')} className="text-indigo-600">Home</button>
-        <button onClick={() => window.history.back()} className="text-indigo-600">Back</button>
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 12 }}>
+        <div style={{ padding: "10px 16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10 }}>
+          <span style={{ fontSize: 10, color: "#64748b", fontWeight: 600, uppercase: true }}>Width</span>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>{width}px</div>
+        </div>
+        <div style={{ padding: "10px 16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10 }}>
+          <span style={{ fontSize: 10, color: "#64748b", fontWeight: 600, uppercase: true }}>Height</span>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>{height}px</div>
+        </div>
       </div>
 
-      <p>Window Width: {width}</p>
-      <p>Window Height: {height}</p>
-
-      <div className="mt-6 border rounded">
-        <p className="mt-6 mb-4 text-3xl" style={{ color: color }}>Count: {count}</p>
-        <button onClick={() => setCount(c => c + 1)}>Add</button>
-        <button onClick={() => setCount(c => c - 1)}>Substract</button>
-        <button onClick={() => setColor(c => c === "gray" ? "red" : "gray")}>Change Color</button>
+      <div style={{ display: "flex", flexDirection: "column", items: "center", gap: 8, textAlign: "center", marginTop: 8 }}>
+        <p style={{ fontSize: 24, fontWeight: 800, margin: 0, color: color === "indigo" ? "#818cf8" : "#f87171" }}>
+          Count: {count}
+        </p>
+        <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+          <button onClick={() => setCount((c) => c + 1)}>Add</button>
+          <button onClick={() => setCount((c) => c - 1)}>Substract</button>
+          <button onClick={() => setColor((c) => (c === "indigo" ? "red" : "indigo"))}>Change Text Color</button>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 
-export default MyEffect;`}</code>
-      </pre>
+export default function Page() {
+  return (
+    <PageLayout
+      title="useEffect() Hook"
+      subtitle="Jalankan efek samping (side effects) di komponen fungsional Anda seperti sinkronisasi dengan API luar."
+      accentColor="#818cf8"
+    >
+      <p>
+        <strong>Apa Itu useEffect?</strong><br />
+        <code>useEffect()</code> adalah hook React yang memungkinkan kamu untuk
+        menjalankan side effect di dalam komponen — seperti sinkronisasi DOM, event
+        listener, fetching data dari API, atau mengatur timer/interval.
+      </p>
 
-      <h2>📌 Tips Penggunaan useEffect</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Gunakan efek hanya untuk hal-hal yang tidak langsung berkaitan dengan
-          rendering, seperti manipulasi DOM, fetch, timer, atau event listener.
-        </li>
-        <li>
-          Jangan lupa <strong>cleanup</strong> pada efek yang menggunakan
-          listener, interval, atau subscription.
-        </li>
-        <li>
-          Gunakan <code>[]</code> jika hanya ingin efek berjalan sekali (saat
-          mount).
-        </li>
+      <h2>💡 3 Mode Pemanggilan useEffect</h2>
+      <ul>
+        <li><code>useEffect(() =&gt; {})</code> — Efek berjalan setiap kali komponen dirender ulang.</li>
+        <li><code>useEffect(() =&gt; {}, [])</code> — Efek berjalan <strong>hanya sekali</strong> saat komponen pertama kali dipasang (mount).</li>
+        <li><code>useEffect(() =&gt; {}, [value])</code> — Efek berjalan saat komponen pertama kali dipasang DAN setiap kali dependency <code>value</code> berubah.</li>
       </ul>
 
-      <h2>Kesimpulan</h2>
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box">
+        <MyEffect />
+      </div>
+
+      <h2>🧪 Contoh: Event Listener Resize Layar</h2>
+      <pre>
+        <code>{`useEffect(() => {
+  window.addEventListener("resize", handleResize);
+
+  // Cleanup function (unmount)
+  return () => {
+    window.removeEventListener("resize", handleResize);
+  }
+}, []); // Empty array = mount & unmount saja`}</code>
+      </pre>
+
+      <h2>📌 Penting: Cleanup Function</h2>
       <p>
-        🎯 <code>useEffect</code> adalah alat penting untuk mengelola efek
-        samping di React function component. Dengan memahami timing dan
-        dependency-nya, kamu bisa mengontrol perilaku komponen secara presisi.
+        Beberapa side effect memerlukan pembersihan untuk menghindari kebocoran memori (memory leak).
+        Kembalikan sebuah fungsi dari <code>useEffect</code> untuk membersihkan listener, subscription, atau timer.
       </p>
-      <Buttons />
-    </div>
+
+      <div className="summary">
+        🎯 Gunakan <code>useEffect</code> sebagai jembatan untuk terhubung ke dunia luar di luar ekosistem React.
+        Selalu bersihkan side effect yang membutuhkan cleanup saat unmount.
+      </div>
+    </PageLayout>
   );
 }

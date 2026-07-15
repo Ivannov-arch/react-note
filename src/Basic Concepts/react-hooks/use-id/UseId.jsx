@@ -1,21 +1,31 @@
 import { useId } from "react";
-import Buttons from "../../../Components/Button";
+import PageLayout from "../../../Components/PageLayout";
 
-export function UseId() {
-  const id = useId();
+function UseIdDemo() {
+  const id1 = useId();
   const id2 = useId();
 
+  const inputStyle = {
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "8px",
+    color: "#e2e8f0",
+    padding: "8px 12px",
+    fontSize: "14px",
+    outline: "none",
+    width: "100%",
+    marginTop: 4,
+  };
+
   return (
-    <div>
-      <code>
-        <p>useId will generate a unique IDs</p>
-      </code>{" "}
-      <hr /> <br />
-      <div className="space-x-2">
-        <label htmlFor={id}>Enter your name</label>
-        <input className="border rounded" type="text" id={id} /> <br /> <br />
-        <label htmlFor={id2}>Enter your name</label>
-        <input className="border rounded" type="text" id={id} />
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div>
+        <label htmlFor={id1} style={{ fontSize: 13, fontWeight: 600, color: "#94a3b8" }}>First Name (Generated ID: <code>{id1}</code>)</label>
+        <input style={inputStyle} type="text" id={id1} placeholder="Enter first name..." />
+      </div>
+      <div>
+        <label htmlFor={id2} style={{ fontSize: 13, fontWeight: 600, color: "#94a3b8" }}>Last Name (Generated ID: <code>{id2}</code>)</label>
+        <input style={inputStyle} type="text" id={id2} placeholder="Enter last name..." />
       </div>
     </div>
   );
@@ -23,88 +33,47 @@ export function UseId() {
 
 export default function Page() {
   return (
-    <div className="space-y-6 text-left">
-      <h1>🆔 useId di React</h1>
-
+    <PageLayout
+      title="useId() Hook"
+      subtitle="Membuat ID unik yang stabil untuk aksesibilitas form dan server-side rendering (SSR)."
+      accentColor="#06b6d4"
+    >
       <p>
-        <strong>Apa Itu useId?</strong>
-        <br />
-        <code>useId</code> adalah hook bawaan dari React yang menghasilkan{" "}
-        <strong>ID unik dan stabil</strong> untuk digunakan dalam elemen form
-        seperti label dan input. Cocok banget buat aksesibilitas dan saat kamu
-        perlu menghubungkan elemen secara semantik!
+        <strong>Apa Itu useId?</strong><br />
+        <code>useId</code> adalah hook bawaan React yang menghasilkan ID unik yang stabil.
+        Sangat direkomendasikan untuk menghubungkan elemen label (<code>htmlFor</code>) dan input (<code>id</code>) demi aksesibilitas.
       </p>
 
-      <h2>🎯 Kenapa Perlu?</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Membantu membuat elemen seperti <code>&lt;label&gt;</code> dan{" "}
-          <code>&lt;input&gt;</code> saling terhubung melalui atribut{" "}
-          <code>htmlFor</code> dan <code>id</code>.
-        </li>
-        <li>
-          ID yang dihasilkan <strong>selalu unik</strong> meskipun ada banyak
-          komponen yang memakai <code>useId</code>.
-        </li>
-        <li>
-          Aman untuk <strong>server-side rendering (SSR)</strong> karena hasil
-          ID-nya konsisten di client dan server.
-        </li>
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box">
+        <UseIdDemo />
+      </div>
+
+      <h2>🎯 Mengapa Menggunakan useId?</h2>
+      <ul>
+        <li>ID yang dihasilkan dijamin selalu unik per render elemen.</li>
+        <li>Kompatibel dengan Server-Side Rendering (SSR) — tidak ada ketidakcocokan ID antara server dan client.</li>
+        <li>Menghindari tabrakan (collisions) ID jika komponen yang sama di-render berkali-kali pada halaman yang sama.</li>
       </ul>
 
-      <h2>🔍 Contoh Kode</h2>
-      <div className="bg-gray-700 p-4 rounded-md overflow-auto">
-        <UseId />
-      </div>
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-sm">
-        <code>{`import { useId } from 'react'
+      <h2>🧪 Contoh Kode Implementasi</h2>
+      <pre>
+        <code>{`import { useId } from "react";
 
-export default function UseIdExample() {
-  const id1 = useId()
-  const id2 = useId()
-
+function FormField() {
+  const id = useId();
   return (
-    <div>
-      <label htmlFor={id1}>Nama Pertama</label>
-      <input id={id1} className="border rounded" type="text" />
-
-      <br /><br />
-
-      <label htmlFor={id2}>Nama Kedua</label>
-      <input id={id2} className="border rounded" type="text" />
-    </div>
-  )
+    <>
+      <label htmlFor={id}>Username</label>
+      <input id={id} type="text" />
+    </>
+  );
 }`}</code>
       </pre>
 
-      <h2>⚠️ Catatan Penting</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Jangan pakai satu ID untuk beberapa elemen! Misal: <br />
-          <code>{`htmlFor={id2}`}</code> tapi <code>{`id={id}`}</code> → ini{" "}
-          <strong>salah</strong> dan bisa bikin label tidak bekerja.
-        </li>
-        <li>
-          Jangan hardcode ID kalau komponen bisa di-render berkali-kali. Gunakan{" "}
-          <code>useId</code> agar tetap unik otomatis.
-        </li>
-      </ul>
-
-      <h2>💡 Kapan Gunakan?</h2>
-      <ul className="list-disc list-inside">
-        <li>Di form yang kompleks dengan banyak label-input.</li>
-        <li>Saat bikin reusable component yang butuh ID unik per render.</li>
-        <li>Untuk jaga aksesibilitas (a11y) dan valid HTML.</li>
-      </ul>
-
-      <h2>Kesimpulan</h2>
-      <p>
-        🎯 <code>useId</code> membantu kamu menghindari konflik ID dan menjaga
-        keterhubungan antar elemen HTML. Ringan, praktis, dan ramah SSR —
-        penting untuk komponen dinamis dan form yang rapi!
-      </p>
-
-      <Buttons />
-    </div>
+      <div className="summary">
+        🎯 Gunakan <code>useId</code> untuk menjaga aksesibilitas elemen form secara dinamis tanpa takut terjadi duplikasi ID di halaman Anda.
+      </div>
+    </PageLayout>
   );
 }

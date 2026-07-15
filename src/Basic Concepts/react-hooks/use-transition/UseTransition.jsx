@@ -1,152 +1,116 @@
 import { useTransition, useState } from "react";
-import Buttons from "../../../Components/Button";
+import PageLayout from "../../../Components/PageLayout";
 
-function UseTransition() {
+const items = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`);
+
+function UseTransitionDemo() {
   const [query, setQuery] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
   const [isPending, startTransition] = useTransition();
-
-  // Membuat 10.000 item contoh
-  const items = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`);
 
   const handleFilter = (e) => {
     const value = e.target.value;
     setQuery(value);
 
     startTransition(() => {
-      // Menyaring item berdasarkan input pengguna
       const filtered = items.filter((item) =>
         item.toLowerCase().includes(value.toLowerCase())
       );
-
       setFilteredItems(filtered);
     });
   };
 
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       <input
         value={query}
         onChange={handleFilter}
-        placeholder="Search items..."
-        className="p-2 border rounded"
+        placeholder="Search 10,000 items..."
+        style={{
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: 8,
+          color: "#e2e8f0",
+          padding: "8px 12px",
+          fontSize: 14,
+          outline: "none",
+          width: "100%",
+        }}
       />
-      {isPending && <p>Loading...</p>}
-      <ul>
-        {filteredItems.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </>
+      {isPending && <p style={{ color: "#3b82f6", fontSize: 13, margin: "2px 0 0" }}>Filtering items in background...</p>}
+      
+      <div
+        style={{
+          maxHeight: 180,
+          overflowY: "auto",
+          background: "rgba(0,0,0,0.2)",
+          borderRadius: 8,
+          padding: "8px 12px",
+          border: "1px solid rgba(255,255,255,0.05)",
+          fontSize: 13,
+        }}
+      >
+        {filteredItems.length === 0 && query ? (
+          <p style={{ color: "#64748b", margin: 0 }}>No items match search</p>
+        ) : filteredItems.length === 0 ? (
+          <p style={{ color: "#64748b", margin: 0 }}>Start typing to filter list...</p>
+        ) : (
+          <ul style={{ margin: 0, paddingLeft: 16 }}>
+            {filteredItems.map((item) => (
+              <li key={item} style={{ color: "#94a3b8", marginBottom: 2 }}>{item}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
   );
 }
 
 export default function Page() {
   return (
-    <div className="space-y-6 text-left">
-      <h1>⚛️ useTransition di React</h1>
-
+    <PageLayout
+      title="useTransition() Hook"
+      subtitle="Tandai pembaruan state tertentu sebagai 'transisi' non-urgent agar UI interaktif tidak freeze saat render data berat."
+      accentColor="#3b82f6"
+    >
       <p>
-        <strong>
-          Apa Itu <code>useTransition</code>?
-        </strong>
-        <br />
-        <code>useTransition</code> adalah hook bawaan React yang digunakan untuk
-        <strong>menunda update state yang berat</strong> agar UI tetap
-        responsif. Cocok untuk kasus seperti:{" "}
-        <em>filter list panjang saat user mengetik</em>.
+        <strong>Apa Itu useTransition?</strong><br />
+        <code>useTransition</code> adalah hook React yang digunakan untuk membagi update state menjadi dua prioritas:
+        Prioritas Tinggi (seperti input teks langsung) dan Prioritas Rendah/Transisi (seperti filter list panjang).
       </p>
 
-      <h2>📍 Masalah Umum Tanpa useTransition</h2>
-      <ul className="list-disc list-inside">
-        <li>User ketik satu huruf → UI freeze karena filter data berat.</li>
-        <li>State update langsung memicu render ulang → Lag terasa.</li>
-        <li>Pengalaman pengguna jadi buruk, apalagi di device lambat.</li>
-      </ul>
-
-      <h2>🚀 Solusi: Pakai useTransition</h2>
-      <p>
-        Dengan <code>useTransition</code>, kita tandai proses berat sebagai{" "}
-        <strong>transisi non-urgent</strong>. React akan:
-      </p>
-      <ul className="list-disc list-inside">
-        <li>Update state ringan (seperti input) langsung dijalankan.</li>
-        <li>
-          Update berat (seperti filter ribuan item) ditunda sampai CPU longgar.
-        </li>
-        <li>UX tetap mulus, tanpa lag saat mengetik.</li>
-      </ul>
-
-      <h2>🧪 Contoh Kasus: Filter List Panjang</h2>
-      <div className="bg-gray-700 p-5 border rounded max-w-fit h-96 overflow-y-auto">
-        <UseTransition />
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box">
+        <UseTransitionDemo />
       </div>
-      <p>Kita punya 10.000 item. User ketik kata kunci → hasil difilter.</p>
 
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
-        <code>{`import { useTransition, useState } from "react";
-  
-  export default function UseTransitionExample() {
-    const [query, setQuery] = useState("");
-    const [filteredItems, setFilteredItems] = useState([]);
-    const [isPending, startTransition] = useTransition();
-  
-    const items = Array.from({ length: 10000 }, (_, i) => \`Item \${i + 1}\`);
-  
-    const handleFilter = (e) => {
-      const value = e.target.value;
-      setQuery(value);
-  
-      startTransition(() => {
-        const filtered = items.filter((item) =>
-          item.toLowerCase().includes(value.toLowerCase())
-        );
-        setFilteredItems(filtered);
-      });
-    };
-  
-    return (
-      <>
-        <input
-          value={query}
-          onChange={handleFilter}
-          placeholder="Search items..."
-          className="p-2 border rounded"
-        />
-        {isPending && <p>Loading...</p>}
-        <ul>
-          {filteredItems.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </>
-    );
-  }`}</code>
+      <h2>🎯 Masalah Tanpa useTransition</h2>
+      <p>
+        Ketika mengetik di input pencarian yang memfilter ribuan item, UI akan lag karena setiap ketukan huruf
+        memaksa React memblokir thread utama untuk memproses pemfilteran berat.
+      </p>
+
+      <h2>🧪 Contoh Kode Implementasi</h2>
+      <pre>
+        <code>{`const [query, setQuery] = useState("");
+const [filteredItems, setFilteredItems] = useState([]);
+const [isPending, startTransition] = useTransition();
+
+const handleFilter = (e) => {
+  const value = e.target.value;
+  setQuery(value); // Urgent: Update input langsung
+
+  startTransition(() => {
+    // Non-Urgent: Update list ditangguhkan
+    const filtered = items.filter(item => item.includes(value));
+    setFilteredItems(filtered);
+  });
+};`}</code>
       </pre>
 
-      <h2>📌 Catatan Penting</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          <code>useTransition</code> digunakan untuk *menunda proses berat*,
-          bukan menggantikan logika filter.
-        </li>
-        <li>
-          <code>isPending</code> bisa dipakai untuk menampilkan indikator
-          loading ringan.
-        </li>
-        <li>
-          Ideal untuk aplikasi besar yang butuh UX cepat walau datanya banyak.
-        </li>
-      </ul>
-
-      <h2>Kesimpulan</h2>
-      <p>
-        🎯 <code>useTransition</code>
-        {` bikin aplikasi React tetap responsif saat
-        user berinteraksi dengan proses berat. Gunakan saat kamu merasa: "kok UI
-        jadi lambat pas update state ya?".`}
-      </p>
-      <Buttons />
-    </div>
+      <div className="summary">
+        🎯 Gunakan <code>useTransition</code> jika Anda mendeteksi interaksi pengguna (seperti mengetik) terganggu atau lag akibat pembaruan state yang memproses data dalam jumlah besar.
+      </div>
+    </PageLayout>
   );
 }

@@ -1,144 +1,94 @@
 import { useInsertionEffect } from "react";
-import Buttons from "../../../Components/Button";
+import PageLayout from "../../../Components/PageLayout";
 
-export function UseInsertEffect() {
+function InsertionEffectDemo() {
   useInsertionEffect(() => {
     const style = document.createElement("style");
+    style.id = "dynamic-theme-style";
     style.innerHTML = `
-        .dynamic-class {
-            color: white;
-            background-color: blue;
-            padding: 10px;
-            border-radius: 10px;
-        }`;
+      .dynamic-class-box {
+        color: #10b981;
+        background-color: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .dynamic-class-box:hover {
+        background-color: rgba(16, 185, 129, 0.15);
+        border-color: rgba(16, 185, 129, 0.4);
+      }
+    `;
     document.head.appendChild(style);
 
-    // cleanup: remove the <style> tag when component unmounts
     return () => {
-      document.head.removeChild(style);
+      const el = document.getElementById("dynamic-theme-style");
+      if (el) document.head.removeChild(el);
     };
-  });
+  }, []);
 
-  return (
-    <>
-      {/* <code>
-        {/* <p>
-          useInsertionEffect will be executed before components being rendered
-          and styling the components */}
-      {/* </p> */}
-      {/* </code>{" "} */}
-      {/* <hr /> <br /> */}
-      <div className="dynamic-class">Styled with useInsertionEffect</div>
-    </>
-  );
+  return <div className="dynamic-class-box">Styled with useInsertionEffect dynamically</div>;
 }
 
 export default function Page() {
   return (
-    <div className="space-y-6 text-left">
-      <h1>
-        🧵 React <code>useInsertionEffect</code>
-      </h1>
-
+    <PageLayout
+      title="useInsertionEffect() Hook"
+      subtitle="Hook yang berjalan sebelum useLayoutEffect untuk menyisipkan elemen style ke dalam DOM sebelum elemen render."
+      accentColor="#10b981"
+    >
       <p>
-        <strong>
-          Apa Itu <code>useInsertionEffect</code>?
-        </strong>
-        <br />
-        Ini adalah hook spesial di React yang dijalankan{" "}
-        <strong>sebelum browser merender DOM</strong> ke layar. Sangat cocok
-        untuk menyisipkan <strong>CSS dinamis</strong> langsung ke{" "}
-        <code>&lt;head&gt;</code>.
+        <strong>Apa Itu useInsertionEffect?</strong><br />
+        Ini adalah hook khusus di React 18 yang dirancang untuk developer library CSS-in-JS.
+        Hook ini dijalankan <strong>sebelum semua efek layout (useLayoutEffect)</strong> dan sebelum DOM dibaca,
+        sehingga CSS dinamis bisa disisipkan ke <code>&lt;head&gt;</code> secara aman dan efisien.
       </p>
 
-      <h2>🔍 Kapan Digunakan?</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Saat kamu ingin menambahkan style secara langsung ke DOM (misalnya
-          lewat <code>{`document.createElement('style')`}</code>).
-        </li>
-        <li>
-          Cocok digunakan di <strong>library CSS-in-JS</strong> seperti Emotion
-          atau styled-components untuk menyisipkan style sebelum elemen muncul
-          di layar.
-        </li>
-        <li>
-          Hook ini dipanggil lebih awal dari <code>useLayoutEffect</code> &{" "}
-          <code>useEffect</code>.
-        </li>
-      </ul>
-
-      <h2>📦 Contoh Penggunaan</h2>
-      <UseInsertEffect />
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-sm">
-        <code>{`import { useInsertionEffect } from 'react';
-  
-  export default function UseInsertEffect() {
-    useInsertionEffect(() => {
-      const style = document.createElement('style');
-      style.innerHTML = \`
-        .dynamic-class {
-          color: white;
-          background-color: blue;
-          padding: 10px;
-          border-radius: 10px;
-        }
-      \`;
-      document.head.appendChild(style);
-  
-      // Cleanup saat komponen di-unmount
-      return () => {
-        document.head.removeChild(style);
-      };
-    });
-  
-    return (
-      <div className="dynamic-class">
-        Styled with useInsertionEffect
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box">
+        <InsertionEffectDemo />
       </div>
-    );
-  }`}</code>
+
+      <h2>🔍 Mengapa Ini Penting?</h2>
+      <p>
+        Menyisipkan tag <code>&lt;style&gt;</code> ke DOM secara dinamis selama rendering biasa atau di dalam
+        <code>useLayoutEffect</code>/<code>useEffect</code> bisa memaksa browser melakukan rekalkulasi style (layout thrashing) berkali-kali.
+        Hook ini menyelesaikan masalah performa tersebut.
+      </p>
+
+      <h2>🧪 Contoh Kode Menyisipkan Style Dinamis</h2>
+      <pre>
+        <code>{`useInsertionEffect(() => {
+  const style = document.createElement("style");
+  style.innerHTML = \`
+    .dynamic-class {
+      color: white;
+      background-color: blue;
+    }
+  \`;
+  document.head.appendChild(style);
+
+  // Cleanup: hapus style tag saat unmount
+  return () => {
+    document.head.removeChild(style);
+  };
+}, []);`}</code>
       </pre>
 
-      <h2>
-        ⚙️ Apa Bedanya dengan <code>useEffect</code>?
-      </h2>
-      <ul className="list-disc list-inside">
-        <li>
-          <strong>useInsertionEffect</strong> → dipanggil sebelum DOM dirender,
-          sehingga style langsung berlaku tanpa flicker.
-        </li>
-        <li>
-          <strong>useEffect</strong> → dipanggil setelah render, berisiko
-          menimbulkan tampilan ‘kedip’ jika menyisipkan style.
-        </li>
+      <h2>⚖️ Perbedaan dengan useEffect & useLayoutEffect</h2>
+      <ul>
+        <li><strong>useInsertionEffect:</strong> Berjalan sebelum mutasi DOM dibaca browser. Digunakan untuk menyisipkan CSS.</li>
+        <li><strong>useLayoutEffect:</strong> Berjalan setelah DOM dimutasi tapi sebelum paint. Digunakan untuk membaca layout DOM.</li>
+        <li><strong>useEffect:</strong> Berjalan setelah render selesai di layar. Digunakan untuk side-effect umum.</li>
       </ul>
 
-      <h2>📌 Tips Penting</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Jangan gunakan untuk side-effect biasa seperti fetch data. Hanya untuk
-          keperluan <strong>styling sinkron</strong>.
-        </li>
-        <li>
-          Tidak berjalan di Server-Side Rendering (SSR), karena berkaitan
-          langsung dengan DOM.
-        </li>
-        <li>
-          Gunakan hanya jika benar-benar perlu. Mayoritas use-case bisa
-          ditangani dengan <code>useEffect</code> atau{" "}
-          <code>useLayoutEffect</code>.
-        </li>
-      </ul>
-
-      <h2>Kesimpulan</h2>
-      <p>
-        🎯 Gunakan <code>useInsertionEffect</code> ketika kamu perlu menyisipkan
-        style langsung ke DOM <strong>sebelum komponen muncul</strong>, untuk
-        menghindari flicker visual. Tapi jangan disalahgunakan untuk efek-efek
-        umum.
-      </p>
-      <Buttons />
-    </div>
+      <div className="summary">
+        🎯 <code>useInsertionEffect</code> dibuat khusus untuk pembuatan library CSS-in-JS (seperti Styled Components atau Emotion)
+        agar penyisipan style dinamis berjalan cepat tanpa merusak performa rendering.
+      </div>
+    </PageLayout>
   );
 }

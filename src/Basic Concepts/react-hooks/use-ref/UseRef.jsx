@@ -1,8 +1,7 @@
-import React, { useEffect, useRef } from "react";
-React;
-import Buttons from "../../../Components/Button";
+import { useEffect, useRef } from "react";
+import PageLayout from "../../../Components/PageLayout";
 
-function UseRef() {
+function UseRefDemo() {
   const inputRef1 = useRef(null);
   const inputRef2 = useRef(null);
   const inputRef3 = useRef(null);
@@ -11,139 +10,118 @@ function UseRef() {
     console.log("COMPONENT RENDERED");
   });
 
+  function focusAndStyle(ref, active) {
+    if (ref.current) {
+      if (active) {
+        ref.current.focus();
+        ref.current.style.borderColor = "#6366f1";
+        ref.current.style.boxShadow = "0 0 0 3px rgba(99,102,241,0.15)";
+        ref.current.style.background = "rgba(99,102,241,0.06)";
+      } else {
+        ref.current.style.borderColor = "rgba(255,255,255,0.08)";
+        ref.current.style.boxShadow = "none";
+        ref.current.style.background = "rgba(255,255,255,0.04)";
+      }
+    }
+  }
+
   function handleClick1() {
-    inputRef1.current.focus();
-    inputRef1.current.style.backgroundColor = "yellow";
-    inputRef2.current.style.backgroundColor = "";
-    inputRef3.current.style.backgroundColor = "";
+    focusAndStyle(inputRef1, true);
+    focusAndStyle(inputRef2, false);
+    focusAndStyle(inputRef3, false);
   }
 
   function handleClick2() {
-    inputRef2.current.focus();
-    inputRef1.current.style.backgroundColor = "";
-    inputRef2.current.style.backgroundColor = "yellow";
-    inputRef3.current.style.backgroundColor = "";
-  }
-  function handleClick3() {
-    inputRef3.current.focus();
-    inputRef1.current.style.backgroundColor = "";
-    inputRef2.current.style.backgroundColor = "";
-    inputRef3.current.style.backgroundColor = "yellow";
+    focusAndStyle(inputRef1, false);
+    focusAndStyle(inputRef2, true);
+    focusAndStyle(inputRef3, false);
   }
 
+  function handleClick3() {
+    focusAndStyle(inputRef1, false);
+    focusAndStyle(inputRef2, false);
+    focusAndStyle(inputRef3, true);
+  }
+
+  const inputStyle = {
+    background: "rgba(255,255,255,0.04)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "8px",
+    color: "#e2e8f0",
+    padding: "8px 12px",
+    fontSize: "14px",
+    outline: "none",
+    width: "100%",
+    transition: "all 0.2s",
+  };
+
   return (
-    <div className="*:my-1 *:border *:rounded text-center">
-      <button className="mx-2" onClick={handleClick1}>
-        Click me!
-      </button>
-      <input className="bg-white" ref={inputRef1} /> <br />
-      <button className="mx-2" onClick={handleClick2}>
-        Click me!
-      </button>
-      <input className="bg-white" ref={inputRef2} /> <br />
-      <button className="mx-2" onClick={handleClick3}>
-        Click me!
-      </button>
-      <input className="bg-white" ref={inputRef3} />
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {[
+        { label: "Input Reference 1", ref: inputRef1, action: handleClick1 },
+        { label: "Input Reference 2", ref: inputRef2, action: handleClick2 },
+        { label: "Input Reference 3", ref: inputRef3, action: handleClick3 },
+      ].map((item, index) => (
+        <div key={index} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <button style={{ minWidth: 100 }} onClick={item.action}>Focus {index + 1}</button>
+          <input style={inputStyle} ref={item.ref} placeholder={`Write in ${item.label}...`} />
+        </div>
+      ))}
     </div>
   );
 }
 
 export default function Page() {
   return (
-    <div className="space-y-6 text-left">
-      <h1>🔍 useRef di React</h1>
-
+    <PageLayout
+      title="useRef() Hook"
+      subtitle="Menyimpan nilai referensi persisten ke DOM element atau variabel tanpa memicu render ulang saat berubah."
+      accentColor="#3b82f6"
+    >
       <p>
-        <strong>Apa Itu useRef?</strong>
-        <br />
-        <code>useRef()</code> adalah hook di React yang digunakan untuk:
-        <strong>
-          {" "}
-          menyimpan referensi ke elemen DOM atau nilai apapun{" "}
-        </strong>{" "}
-        tanpa menyebabkan re-render saat nilainya berubah.
+        <strong>Apa Itu useRef?</strong><br />
+        <code>useRef()</code> adalah hook di React yang digunakan untuk membuat referensi objek yang persisten.
+        Nilai referensi ini disimpan pada property <code>.current</code> yang bisa kita modifikasi secara langsung.
       </p>
 
-      <h2>🎯 Kapan Digunakan?</h2>
-      <ul className="list-disc list-inside">
-        <li>Mengakses atau memodifikasi elemen DOM secara langsung.</li>
-        <li>
-          Menyimpan nilai yang *persisten* antar render tanpa trigger render
-          ulang.
-        </li>
-        <li>
-          Contoh: fokus input otomatis, mengatur style, menyimpan ID timer, dll.
-        </li>
+      <h2>🎯 Kegunaan Utama</h2>
+      <ul>
+        <li>Mengakses atau memanipulasi DOM element secara langsung (seperti memfokuskan input).</li>
+        <li>Menyimpan nilai variabel persisten di antara proses render tanpa memicu re-render baru.</li>
       </ul>
 
-      <h2>🧪 Contoh: Fokus & Highlight Input</h2>
-      <pre className="bg-gray-700 p-4 border rounded-md overflow-auto text-gray-500 text-sm">
-        <UseRef />
-      </pre>
-      <p>
-        Dalam contoh ini, kita punya 3 tombol yang ketika diklik, akan
-        memfokuskan input tertentu dan mewarnainya. Kita menggunakan{" "}
-        <code>useRef()</code> untuk mengakses DOM input secara langsung.
-      </p>
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box">
+        <UseRefDemo />
+      </div>
 
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
-        <code>{`const inputRef1 = useRef(null);
-  const inputRef2 = useRef(null);
-  const inputRef3 = useRef(null);
-  
-  function handleClick1() {
-    inputRef1.current.focus();
-    inputRef1.current.style.backgroundColor = "yellow";
-    inputRef2.current.style.backgroundColor = "";
-    inputRef3.current.style.backgroundColor = "";
-  }`}</code>
+      <h2>🧪 Contoh Penggunaan Kode</h2>
+      <pre>
+        <code>{`const inputRef = useRef(null);
+
+function handleFocus() {
+  // Mengakses method DOM focus secara langsung
+  inputRef.current.focus();
+}
+
+return (
+  <>
+    <input ref={inputRef} />
+    <button onClick={handleFocus}>Focus Input</button>
+  </>
+);`}</code>
       </pre>
 
-      <h2>📌 Penjelasan Kode</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          <code>useRef(null)</code> → Membuat referensi awal ke elemen (masih
-          null).
-        </li>
-        <li>
-          <code>{`ref={inputRef1}`}</code> → Menghubungkan referensi ke elemen
-          input.
-        </li>
-        <li>
-          <code>inputRef1.current</code> → Mengakses elemen DOM-nya.
-        </li>
-        <li>
-          Dengan <code>.focus()</code> dan <code>.style</code>, kita langsung
-          mengubah DOM input.
-        </li>
+      <h2>🔄 Perbedaan Utama: useRef vs useState</h2>
+      <ul>
+        <li><strong>useState:</strong> Memperbarui state akan memicu komponen untuk me-render ulang (re-render) agar UI diperbarui.</li>
+        <li><strong>useRef:</strong> Memperbarui nilai <code>ref.current</code> tidak memicu re-render. Cocok untuk data internal komponen yang tidak tampil di layar secara langsung.</li>
       </ul>
 
-      <h2>🔄 useRef Tidak Memicu Re-render</h2>
-      <p>
-        Tidak seperti <code>useState</code>, perubahan pada{" "}
-        <code>useRef.current</code> tidak membuat komponen dirender ulang. Cocok
-        untuk nilai-nilai yang tidak butuh tampilan real-time.
-      </p>
-
-      <h2>🧠 Bonus: Perbedaan useRef vs useState</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          <strong>useState</strong>: render ulang setiap kali nilainya berubah.
-        </li>
-        <li>
-          <strong>useRef</strong>: nilainya berubah tapi tidak memicu render
-          ulang.
-        </li>
-      </ul>
-
-      <h2>Kesimpulan</h2>
-      <p>
-        🔧 Gunakan <code>useRef</code> jika kamu ingin berinteraksi dengan DOM
-        secara langsung atau menyimpan nilai antar render tanpa menyebabkan
-        render ulang. Simpel tapi sangat powerful!
-      </p>
-      <Buttons />
-    </div>
+      <div className="summary">
+        🎯 Gunakan <code>useRef</code> saat Anda ingin mengakses properti DOM murni secara langsung
+        atau membutuhkan penyimpanan state lokal yang tidak mempengaruhi rendering antarmuka.
+      </div>
+    </PageLayout>
   );
 }

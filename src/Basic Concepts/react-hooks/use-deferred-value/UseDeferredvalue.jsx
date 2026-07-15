@@ -1,9 +1,10 @@
 import { useDeferredValue, useState } from "react";
-import Buttons from "../../../Components/Button";
+import PageLayout from "../../../Components/PageLayout";
 
-export function UseDeferredvalue() {
+const items = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`);
+
+function DeferredDemo() {
   const [query, setQuery] = useState("");
-  const items = Array.from({ length: 10000 }, (_, i) => `Item ${i + 1}`);
   const deferredQuery = useDeferredValue(query);
 
   const filteredItems = items.filter((item) =>
@@ -11,33 +12,48 @@ export function UseDeferredvalue() {
   );
 
   return (
-    <div className="space-y-4 mx-auto p-6 max-w-full text-gray-800">
-      <div className="bg-gray-100 p-4 rounded">
-        <p className="text-sm">
-          <strong>useDeferredValue()</strong> menunda nilai hingga render
-          berikutnya. Berguna untuk optimasi performa saat input cepat & data
-          besar.
-        </p>
-      </div>
-
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search items..."
-        className="px-3 py-2 border border-gray-300 focus:border-blue-300 rounded focus:outline-none focus:ring w-full text-gray-400 placeholder-gray-400"
+        placeholder="Type quickly to search..."
+        style={{
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: 8,
+          color: "#e2e8f0",
+          padding: "8px 12px",
+          fontSize: 14,
+          outline: "none",
+          width: "100%",
+        }}
       />
 
       {query !== deferredQuery && (
-        <p className="text-blue-500 text-sm animate-pulse">Loading...</p>
+        <p style={{ color: "#3b82f6", fontSize: 13, margin: 0 }}>Computing deferred filter results...</p>
       )}
 
-      <div className="bg-white shadow-inner p-3 border rounded h-[300px] overflow-y-auto">
-        <ul className="space-y-1 text-sm list-disc list-inside">
-          {filteredItems.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
+      <div
+        style={{
+          maxHeight: 180,
+          overflowY: "auto",
+          background: "rgba(0,0,0,0.2)",
+          borderRadius: 8,
+          padding: "8px 12px",
+          border: "1px solid rgba(255,255,255,0.05)",
+          fontSize: 13,
+        }}
+      >
+        {filteredItems.length === 0 ? (
+          <p style={{ color: "#64748b", margin: 0 }}>No items match search</p>
+        ) : (
+          <ul style={{ margin: 0, paddingLeft: 16 }}>
+            {filteredItems.map((item) => (
+              <li key={item} style={{ color: "#94a3b8", marginBottom: 2 }}>{item}</li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
@@ -45,93 +61,42 @@ export function UseDeferredvalue() {
 
 export default function Page() {
   return (
-    <div className="space-y-6 text-left">
-      <h1>
-        🕗 Memahami <code>useDeferredValue</code> di React
-      </h1>
-
+    <PageLayout
+      title="useDeferredValue() Hook"
+      subtitle="Tunda pembaruan nilai/render variabel tertentu agar UI tetap interaktif selama input cepat."
+      accentColor="#f59e0b"
+    >
       <p>
-        <strong>
-          Apa Itu <code>useDeferredValue</code>?
-        </strong>
-        <br />
-        <code>useDeferredValue</code> adalah hook dari React yang digunakan
-        untuk <strong>menunda pembaruan nilai tertentu</strong> agar tidak
-        langsung dievaluasi saat render, tapi dilakukan setelah render selesai.
-        Cocok untuk: <strong>optimasi performa</strong> saat memfilter data
-        besar, seperti pencarian live.
+        <strong>Apa Itu useDeferredValue?</strong><br />
+        <code>useDeferredValue</code> adalah hook bawaan React yang memungkinkan kita menangguhkan pembaruan bagian UI yang lambat.
+        Berbeda dengan <code>useTransition</code> yang menunda fungsi update state, hook ini bekerja langsung pada **nilai (value)** itu sendiri.
       </p>
 
-      <h2>🔍 Studi Kasus: Search 10.000 Item</h2>
-      <p>
-        Misalnya kamu punya 10.000 data dan pengguna mengetik di input search.
-        Tanpa optimasi, setiap huruf yang diketik langsung memicu filter 10.000
-        item = bisa lag.
-      </p>
-      <p>
-        Dengan <code>useDeferredValue</code>
-        {`, kamu bisa tunda pencarian sampai
-        React sempat "bernafas", sehingga UI lebih responsif.`}
-      </p>
+      <h2>🚀 Live Demo</h2>
+      <div className="demo-box">
+        <DeferredDemo />
+      </div>
 
       <h2>⚙️ Cara Kerja Sederhana</h2>
-      <ul className="list-disc list-inside">
-        <li>
-          Gunakan <code>useState</code> untuk menyimpan input dari user.
-        </li>
-        <li>
-          Bungkus nilai input dengan <code>useDeferredValue</code>
-          {` untuk
-          mendapatkan versi "tertunda".`}
-        </li>
-        <li>Gunakan versi tertunda itu untuk filtering.</li>
-        <li>
-          Saat <code>query</code> !== <code>deferredQuery</code>
-          {`, artinya masih
-          menunggu pembaruan → bisa tampilkan "Loading...".`}
-        </li>
+      <ul>
+        <li>Gunakan <code>useState</code> untuk menangkap input teks pengguna secara real-time.</li>
+        <li>Bungkus nilai input dengan <code>useDeferredValue(query)</code> untuk mendapatkan versi nilai tertunda.</li>
+        <li>Gunakan versi tertunda untuk memproses kalkulasi berat (seperti memfilter data).</li>
       </ul>
 
-      <h2>🧪 Contoh Kode: Search dengan Penundaan</h2>
-      <UseDeferredvalue />
-      <pre className="bg-gray-800 p-4 rounded-md overflow-auto text-white text-sm">
-        <code>{`import { useDeferredValue, useState } from "react";
-  
-  export default function UseDeferredValueExample() {
-    const [query, setQuery] = useState("");
-    const deferredQuery = useDeferredValue(query);
-  
-    const items = Array.from({ length: 10000 }, (_, i) => \`Item \${i + 1}\`);
-    const filteredItems = items.filter((item) =>
-      item.toLowerCase().includes(deferredQuery.toLowerCase())
-    );
-  
-    return (
-      <div>
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search..."
-          className="px-2 py-1 border rounded"
-        />
-        {query !== deferredQuery && <p>Loading...</p>}
-        <ul>
-          {filteredItems.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </div>
-    );
-  }`}</code>
+      <h2>🧪 Contoh Kode</h2>
+      <pre>
+        <code>{`const [query, setQuery] = useState("");
+const deferredQuery = useDeferredValue(query);
+
+const filteredItems = useMemo(() => {
+  return items.filter(item => item.includes(deferredQuery));
+}, [deferredQuery]);`}</code>
       </pre>
 
-      <h2>🎯 Kesimpulan</h2>
-      <p>
-        <code>useDeferredValue</code> membantu menjaga performa UI saat kamu
-        menangani input yang berubah cepat + data besar. Ini bukan debouncing,
-        tapi <strong>penjadwalan render pintar dari React</strong>!
-      </p>
-      <Buttons />
-    </div>
+      <div className="summary">
+        🎯 <code>useDeferredValue</code> sangat efektif saat Anda mengoper data dinamis yang sering berubah ke komponen anak yang lambat atau berat untuk dirender.
+      </div>
+    </PageLayout>
   );
 }
