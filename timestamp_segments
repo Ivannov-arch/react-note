@@ -1,0 +1,21 @@
+# React Full Course Timestamps
+1. 00:00:00 React tutorial for beginners ⚛️
+2. 00:20:26 card components 🃏
+3. 00:32:24 add CSS styles 🎨
+4. 00:40:40 props📧 (defaultProps are now deprecated in React 19+ )
+5. 00:52:49 conditional rendering ❓
+6. 01:03:04 render lists 📃
+7. 01:29:43 click events 👆
+8. 01:42:04 useState() hook 🎣
+9. 01:58:36 onChange event handler 🚦
+10. 02:13:16 color picker app 🖌
+11. 02:23:31 updater functions 🔄
+12. 02:30:45 update OBJECTS in state 🚗
+13. 02:39:55 update ARRAYS in state 🍎
+14. 02:48:55 update ARRAY of OBJECTS in state 🚘
+15. 03:01:42 to-do list app ☝
+16. 03:24:17 useEffect() hook 🌟
+17. 03:44:08 digital clock app 🕒
+18. 04:00:08 useContext() hook 🧗‍♂️
+19. 04:11:44 useRef() hook 🗳️
+20. 04:23:01 stopwatch app ⏱

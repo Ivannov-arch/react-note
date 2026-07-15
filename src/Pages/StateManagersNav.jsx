@@ -1,13 +1,17 @@
-import { Link } from "react-router-dom";
+import NavPageLayout from "../Components/NavPageLayout";
+
+const items = [
+  { label: "Zustand", path: "/state-managers/zustand", tag: "lightweight" },
+  { label: "Redux", path: "/state-managers/redux", tag: "classic" },
+];
 
 export default function StateManagers() {
-
-    return(
-        <ul className="*:my-1">
-            <li><Link to='/state-managers/zustand'>Zustand</Link></li>
-            <li><Link to='/state-managers/redux'>Redux</Link></li>
-            <button onClick={() => window.history.back()} className="text-indigo-600">Back</button>
-        </ul>
-    )
+  return (
+    <NavPageLayout
+      title="State Managers"
+      subtitle="Compare global state solutions — from tiny Zustand to full Redux."
+      items={items}
+      accentColor="#f43f5e"
+    />
+  );
 }
-

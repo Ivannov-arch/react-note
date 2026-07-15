@@ -1,21 +1,20 @@
+import NavPageLayout from "../Components/NavPageLayout";
 
-
-import { Link, useNavigate } from "react-router-dom";
+const items = [
+  { label: "useState()", path: "/use-state" },
+  { label: "Update Array", path: "/use-state/update-array" },
+  { label: "Update Object", path: "/use-state/update-object" },
+  { label: "Update Array of Objects", path: "/use-state/update-array-of-object" },
+  { label: "Counter Example", path: "/use-state/counter" },
+];
 
 export default function UseStatesNav() {
-const navigate = useNavigate()
-
-    return(
-        <ul className="*:my-1">
-            <li><Link to='/use-state'>useState()</Link></li>
-            <li><Link to='/use-state/update-array'>UpdateArray</Link></li>
-            <li><Link to='/use-state/update-object'>UpdateObject</Link></li>
-            <li><Link to='/use-state/update-array-of-object'>UpdateArrayOfObject</Link></li>
-            <li><Link to='/use-state/counter'>Counter</Link></li>
-            <div className="*:mx-2 pt-4">
-                <button onClick={() => navigate('/')} className="text-indigo-600">Home</button>
-                <button onClick={() => window.history.back()} className="text-indigo-600">Back</button>
-            </div>
-        </ul>
-    )
+  return (
+    <NavPageLayout
+      title="useState()"
+      subtitle="Managing local component state — arrays, objects, and complex structures."
+      items={items}
+      accentColor="#f59e0b"
+    />
+  );
 }

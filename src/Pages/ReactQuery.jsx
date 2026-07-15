@@ -1,11 +1,17 @@
-import { Link } from "react-router-dom"
+import NavPageLayout from "../Components/NavPageLayout";
+
+const items = [
+  { label: "by Austin Davis", path: "/react-query/austin" },
+  { label: "by Web Dev Simplified", path: "/react-query/wds" },
+];
 
 export default function ReactQueryApp() {
   return (
-    <ul className="flex flex-col *:my-1">
-        <Link to='/react-query/austin'>by Austin Davis</Link>
-        <Link to='/react-query/wds'>by Web Dev Simplified</Link>
-        <button onClick={() => window.history.back()} className="text-indigo-600">Back</button>
-    </ul>
-  )
+    <NavPageLayout
+      title="React Query"
+      subtitle="Server-state management, caching, and async data fetching made easy."
+      items={items}
+      accentColor="#06b6d4"
+    />
+  );
 }

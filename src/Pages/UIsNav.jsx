@@ -1,13 +1,16 @@
-import { Link } from "react-router-dom";
+import NavPageLayout from "../Components/NavPageLayout";
+
+const items = [
+  { label: "Table", path: "/UI/table" },
+];
 
 export default function UINav() {
-
-    return(
-        <ul className="*:my-1">
-            <li><Link to='/UI/table'>Table</Link></li>
-            {/* <li><Link to='/state-managers/redux'>Redux</Link></li> */}
-            <button onClick={() => window.history.back()} className="text-indigo-600">Back</button>
-        </ul>
-    )
+  return (
+    <NavPageLayout
+      title="UI Components"
+      subtitle="Reusable, styled UI building blocks — tables, buttons, and more."
+      items={items}
+      accentColor="#fb923c"
+    />
+  );
 }
-
